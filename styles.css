@@ -1,0 +1,471 @@
+/* ═══════════════════════════════════════════════
+   Kim Castle — Splash Page
+   Elegant. Sovereign. Clean. Intentional space.
+   Designed at 1920x1080
+   ═══════════════════════════════════════════════ */
+
+:root {
+  --gold: #C29E63;
+  --white: #ffffff;
+  --dark: #2E2216;
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+}
+
+section, footer, div {
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+html, body {
+  width: 100%;
+  background: var(--dark);
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  border: none;
+  outline: none;
+}
+
+/* ── VIDEO HERO ── */
+.hero {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  display: block;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  vertical-align: top;
+}
+
+.hero video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  z-index: 0;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(46, 34, 22, 0.80) 0%,
+    rgba(46, 34, 22, 0.55) 55%,
+    rgba(46, 34, 22, 0) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-bottom-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(to bottom, transparent, var(--dark));
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ── HERO CONTENT ── */
+.hero-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  padding: 48px 80px 48px 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* ── TOP ROW ── */
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  animation: fadeIn 1.2s ease forwards;
+}
+
+/* ── NAME BLOCK — TOP LEFT ── */
+.name-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.name {
+  font-family: 'ivypresto-display', serif;
+  font-weight: 300;
+  font-style: normal;
+  font-size: clamp(20px, 2.1vw, 40px);
+  letter-spacing: 0;
+  color: var(--white);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.title-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+}
+
+.title-line {
+  font-family: 'Red Hat Display', sans-serif;
+  font-weight: 500;
+  font-size: clamp(9px, 0.75vw, 14px);
+  letter-spacing: 0.01em;
+  color: var(--gold);
+  text-transform: uppercase;
+  line-height: 1.9;
+}
+
+/* ── OPT-IN BLOCK — TOP RIGHT ── */
+.optin-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+  max-width: 520px;
+}
+
+.optin-label {
+  font-family: 'ivypresto-display', serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(14px, 1.25vw, 24px);
+  letter-spacing: 0;
+  color: var(--white);
+  text-align: right;
+  line-height: 1.3;
+}
+
+.optin-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.optin-form input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(194, 158, 99, 0.35);
+  padding: 8px 2px;
+  font-family: 'Red Hat Display', sans-serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(9px, 0.6vw, 11px);
+  letter-spacing: 0;
+  color: var(--white);
+  outline: none;
+  width: 100px;
+  transition: border-color 0.3s ease;
+}
+
+.optin-form input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+  font-style: italic;
+  text-transform: uppercase;
+}
+
+.optin-form input:focus {
+  border-bottom-color: var(--gold);
+}
+
+.optin-form input.email {
+  width: 130px;
+}
+
+.btn-in {
+  background: var(--gold);
+  color: var(--dark);
+  border: none;
+  padding: 10px 20px;
+  font-family: 'Red Hat Display', sans-serif;
+  font-weight: 500;
+  font-size: clamp(8px, 0.6vw, 11px);
+  letter-spacing: 0;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-in:hover {
+  background: var(--white);
+}
+
+/* ── COPY BLOCK — MID LEFT ── */
+.copy-block {
+  max-width: 580px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  opacity: 0;
+  animation: fadeInUp 1.6s ease 0.5s forwards;
+}
+
+.headline {
+  font-family: 'ivypresto-display', serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(16px, 1.45vw, 28px);
+  line-height: 1.2;
+  color: var(--white);
+  letter-spacing: 0;
+  margin-bottom: 6px;
+}
+
+.body-copy {
+  font-family: 'Red Hat Display', sans-serif;
+  font-weight: 400;
+  font-size: clamp(12px, 0.85vw, 16px);
+  line-height: 1.65;
+  color: #ffffff;
+  letter-spacing: 0;
+}
+
+.body-copy strong {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.gold-line {
+  font-family: 'Red Hat Display', sans-serif;
+  font-weight: 400;
+  font-size: clamp(12px, 0.85vw, 16px);
+  line-height: 1.65;
+  color: #C29E63;
+  letter-spacing: 0;
+}
+
+.gold-line em {
+  font-style: italic;
+}
+
+.closing-line {
+  font-family: 'ivypresto-display', serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(11px, 0.85vw, 16px);
+  line-height: 1.3;
+  color: #ffffff;
+  letter-spacing: 0;
+  margin-top: 4px;
+}
+
+/* ── BOTTOM ROW ── */
+.bottom-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  width: 100%;
+}
+
+/* ── LISTEN ELEMENT ── */
+.listen-btn {
+  position: absolute;
+  right: 80px;
+  top: 48%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  opacity: 0;
+  animation: fadeIn 0.8s ease 2s forwards;
+  z-index: 3;
+}
+
+.listen-dot {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+}
+
+.listen-dot-core {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.listen-dot-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0.25;
+  animation: pulseRing 2.4s ease-out infinite;
+}
+
+.listen-label {
+  font-family: 'Red Hat Display', sans-serif;
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+
+/* ── CREDENTIALS BLOCK — BOTTOM RIGHT ── */
+.credentials-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 14px;
+  opacity: 0;
+  animation: fadeIn 1.6s ease 0.8s forwards;
+}
+
+.logo-bar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.logo-bar img {
+  height: 28px;
+  width: auto;
+  opacity: 0.75;
+  transition: opacity 0.3s ease;
+}
+
+.logo-bar img:hover {
+  opacity: 1;
+}
+
+.webby-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.webby-label {
+  font-family: 'Red Hat Display', sans-serif;
+  font-weight: 500;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(194, 158, 99, 0.5);
+}
+
+.webby-logo {
+  height: 44px;
+  width: auto;
+  opacity: 0.75;
+}
+
+/* ── BELOW HERO ── */
+.below-hero {
+  background: var(--dark);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 56px 32px;
+  margin: 0;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.seal {
+  width: 160px;
+  height: 160px;
+  opacity: 0.85;
+  margin-bottom: 16px;
+}
+
+.tagline {
+  font-family: 'ivypresto-display', serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(11px, 0.75vw, 14px);
+  line-height: 1.2;
+  color: var(--gold);
+  text-align: center;
+  letter-spacing: 0.062em;
+  margin-bottom: 40px;
+}
+
+/* ── FOOTER ── */
+.footer {
+  padding: 24px 56px;
+  width: 100%;
+  background: var(--dark);
+}
+
+.footer-text {
+  font-family: 'Red Hat Display', sans-serif;
+  font-weight: 500;
+  font-size: clamp(10px, 0.65vw, 12px);
+  line-height: 1.2;
+  letter-spacing: 0;
+  color: rgba(255, 255, 255, 0.35);
+  text-align: center;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseRing {
+  0% { transform: scale(1); opacity: 0.25; }
+  60% { transform: scale(2.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  .hero-content { padding: 28px 24px; }
+  .top-row { flex-direction: column; gap: 24px; }
+  .optin-block { align-items: flex-start; max-width: 100%; }
+  .optin-label { text-align: left; }
+  .optin-form { flex-wrap: wrap; }
+  .copy-block { max-width: 100%; }
+  .listen-btn { right: 24px; }
+  .credentials-block { display: none; }
+  .below-hero { padding: 48px 24px 36px; }
+  .footer { padding: 20px 24px; }
+}

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kim Castle — Creative Intelligence Director</title>
+  <meta name="description" content="Award-winning Creative Director, Creative Intelligence Director, and Brandom® Co-Founder. Helping female founders become Known™.">
+
+  <!-- Adobe Fonts — IvyPresto Display -->
+  <link rel="stylesheet" href="https://use.typekit.net/mtl0bsa.css">
+
+  <!-- Google Fonts — Red Hat Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Local Font — Faustina -->
+  <style>
+    @font-face {
+      font-family: 'Faustina';
+      src: url('assets/fonts/Faustine.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+  </style>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     HERO — FULL VIEWPORT VIDEO
+═══════════════════════════════════════ -->
+<section class="hero">
+
+  <!-- VIDEO NOTE FOR DEVELOPER:
+       Current file hosted on Rackspace CDN (~20MB).
+       Please compress before final deploy:
+       - Re-encode to H.264, 1080p max
+       - Target file size: under 8MB
+       - Re-host on AWS S3 / CloudFront (migrating from Rackspace)
+       - Update src URL below after re-hosting -->
+  <video
+    id="hero-video"
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="auto"
+  >
+    <source src="https://ip-cloudfiles.s3.us-east-2.amazonaws.com/kimcastle/known/Meet+Kim+Castle+Hero.m4v" type="video/mp4">
+  </video>
+
+  <!-- Gradient overlays -->
+  <div class="hero-overlay"></div>
+  <div class="hero-bottom-fade"></div>
+
+  <!-- HERO CONTENT -->
+  <div class="hero-content">
+
+    <!-- TOP ROW -->
+    <div class="top-row">
+
+      <!-- Name + Title — Top Left -->
+      <div class="name-block">
+        <div class="name">Kim Castle</div>
+        <div class="title-lines">
+          <div class="title-line">Award-Winning Creative Director</div>
+          <div class="title-line">Creative Intelligence Director</div>
+          <div class="title-line">Brandom® Co-Founder</div>
+        </div>
+      </div>
+
+      <!-- Opt-In — Top Right -->
+      <div class="optin-block">
+        <div class="optin-label" id="optin-label">Your weekly dose of creative intelligence.</div>
+        <div class="optin-form">
+          <input type="text" id="first-name" placeholder="First Name">
+          <input type="text" id="last-name" placeholder="Last Name">
+          <input type="email" id="email" class="email" placeholder="Email">
+          <button class="btn-in" id="btn-in">I'm In</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- COPY BLOCK — Mid Left -->
+    <div class="copy-block">
+
+      <h1 class="headline">You already are what you're becoming.</h1>
+
+      <p class="body-copy">
+        In the age of AI, feeling is the most advanced technology we have.
+        The brands that move people don't just look extraordinary — they
+        transmit something unmistakable.
+      </p>
+
+      <p class="gold-line">That's not strategy. That's <em>Creative Intelligence</em>™.</p>
+
+      <p class="body-copy">
+        For over two decades, I've worked with brands that transmit feeling
+        at the highest levels — and now I bring that same market influence to
+        female founders who are ready to be <strong>Known™.</strong>
+      </p>
+
+      <p class="body-copy">
+        You show up. Consistently. Professionally. Visibly. And still —
+        something isn't landing.
+      </p>
+
+      <p class="gold-line">You've been marketing a version of yourself that moved out two years ago.</p>
+
+      <p class="closing-line">Everything changes the moment your own voice becomes harder to ignore than everyone else's.</p>
+
+    </div>
+
+    <!-- BOTTOM ROW — Credentials Bottom Right -->
+    <div class="bottom-row">
+      <div class="credentials-block">
+
+        <!-- Client Logos — in order as designed -->
+        <div class="logo-bar">
+
+          <img src="assets/logos/abc.png" alt="ABC">
+          <img src="assets/logos/onus.png" alt="ONUS">
+          <img src="assets/logos/gm.png" alt="General Motors">
+          <img src="assets/logos/funfull.png" alt="Funfull">
+          <img src="assets/logos/pop.png" alt="POP! Gourmet">
+          <img src="assets/logos/disney.png" alt="Disney Interactive">
+        </div>
+
+        <!-- Webby — separated with label -->
+        <div class="webby-block">
+          <span class="webby-label">Webby Award Winner</span>
+          <img class="webby-logo" src="assets/logos/webby.png" alt="The Webby Awards">
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- LISTEN Element — fades in at 2 seconds -->
+  <div class="listen-btn" id="listen-btn">
+    <div class="listen-dot">
+      <div class="listen-dot-core"></div>
+      <div class="listen-dot-ring" id="dot-ring"></div>
+    </div>
+    <span class="listen-label" id="listen-label">Listen</span>
+  </div>
+
+</section>
+
+<!-- ═══════════════════════════════════════
+     BELOW HERO — SEAL + TAGLINE + FOOTER
+═══════════════════════════════════════ -->
+<section class="below-hero">
+
+  <!-- Animated Seal -->
+  <img
+    class="seal"
+    src="assets/images/k_animated.gif"
+    alt="Kim Castle — Let's Create Something Big Together"
+  >
+
+  <!-- Tagline -->
+  <p class="tagline">Because people don't buy brands. They buy goosebumps.™</p>
+
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <p class="footer-text">© Intention Products, LLC. Kim Castle is a trademark licensed to Intention Products, LLC.</p>
+</footer>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>
