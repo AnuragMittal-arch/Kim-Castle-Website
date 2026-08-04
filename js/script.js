@@ -35,15 +35,22 @@ document.addEventListener('DOMContentLoaded', function () {
   /* ═══════════════════════════════════════════
      OPT-IN FORM → ACTIVECAMPAIGN
 
-     This posts to subscribe.php on our own server, which holds the
+     This posts to a small serverless function which holds the
      ActiveCampaign API key and adds the contact to the "Kim Castle
-     General" list via the API.
+     General" list via the API. Source lives in the separate
+     kimcastle-subscribe-api project; see its README to deploy.
+
+     Paste the deployed URL below, e.g.
+       https://kimcastle-subscribe-api.vercel.app/api/subscribe
 
      The key is deliberately NOT here. Anything in this file is visible
      to every visitor via View Source, and an exposed key would grant
      read/write access to every list in the ActiveCampaign account.
+
+     While this is blank the form reports sign-up as unavailable rather
+     than pretending a submission worked.
      ═══════════════════════════════════════════ */
-  const SUBSCRIBE_ENDPOINT = '/subscribe.php';
+  const SUBSCRIBE_ENDPOINT = '';
 
   const optinForm = document.getElementById('optin-form');
   const optinLabel = document.getElementById('optin-label');
@@ -145,6 +152,11 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!result.ok) {
       showMessage(result.message, true);
       if (result.focus) result.focus.focus();
+      return;
+    }
+
+    if (!SUBSCRIBE_ENDPOINT) {
+      showMessage('Sign-up is temporarily unavailable. Please try again later.', true);
       return;
     }
 
