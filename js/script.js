@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
      While this is blank the form reports sign-up as unavailable rather
      than pretending a submission worked.
      ═══════════════════════════════════════════ */
-  const SUBSCRIBE_ENDPOINT = '';
+  const SUBSCRIBE_ENDPOINT = '/subscribe.php';
 
   const optinForm = document.getElementById('optin-form');
   const optinLabel = document.getElementById('optin-label');
