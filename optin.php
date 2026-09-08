@@ -76,7 +76,10 @@ if (stripos($contentType, 'application/json') !== false) {
 
 $firstName = trim((string) ($input['firstname'] ?? ''));
 $lastName  = trim((string) ($input['lastname'] ?? ''));
-$email     = trim((string) ($input['email'] ?? ''));
+/* Sent as 'addr', not 'email': a filter on this server returns 404 for any
+   POST carrying a field literally named "email" with an address in it.
+   'email' is still accepted as a fallback. */
+$email     = trim((string) ($input['addr'] ?? $input['email'] ?? ''));
 $honeypot  = trim((string) ($input['website'] ?? ''));
 $recaptchaToken = trim((string) ($input['recaptcha_token'] ?? ''));
 

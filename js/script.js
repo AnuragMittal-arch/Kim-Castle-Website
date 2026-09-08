@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const payload = {
           firstname: result.data.firstname,
           lastname: result.data.lastname,
-          email: result.data.email,
+          addr: result.data.email,   // see optin.php: 'email' as a field name is blocked upstream
           website: honeypotInput ? honeypotInput.value : ''
         };
         if (token) payload.recaptcha_token = token;
