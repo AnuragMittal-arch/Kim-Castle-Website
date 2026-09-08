@@ -49,10 +49,16 @@ header('Cache-Control: no-store');
 function fail(int $httpCode, string $publicMessage, string $logDetail = ''): never
 {
     if ($logDetail !== '') {
-        error_log('[subscribe.php] ' . $logDetail);
+        error_log('[optin.php] ' . $logDetail);
     }
-    http_response_code($httpCode);
-    echo json_encode(['ok' => false, 'error' => $publicMessage]);
+    /* Deliberately answers HTTP 200 even for failures. This server runs
+       fastcgi_intercept_errors with error_page rules pointing at 404.html /
+       502.html, neither of which exists — so any 4xx/5xx we return is
+       swallowed and reaches the browser as a bare nginx 404, hiding the real
+       reason. The JSON body carries the outcome; the front-end keys off
+       "ok", never the status line. "status" is kept for debugging. */
+    http_response_code(200);
+    echo json_encode(['ok' => false, 'error' => $publicMessage, 'status' => $httpCode]);
     exit;
 }
 
@@ -89,7 +95,7 @@ $recaptchaToken = trim((string) ($input['recaptcha_token'] ?? ''));
    on, whereas an error invites it to retry with a different technique.
    Nothing is sent to ActiveCampaign. */
 if ($honeypot !== '') {
-    error_log('[subscribe.php] honeypot triggered by ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
+    error_log('[optin.php] honeypot triggered by ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
     echo json_encode(['ok' => true]);
     exit;
 }
