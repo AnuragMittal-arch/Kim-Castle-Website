@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
      While this is blank the form reports sign-up as unavailable rather
      than pretending a submission worked.
      ═══════════════════════════════════════════ */
-  const SUBSCRIBE_ENDPOINT = '/subscribe.php';
+  const SUBSCRIBE_ENDPOINT = '/optin.php';
 
   /* Google reCAPTCHA v3 — invisible, no checkbox, so the page design is
      untouched. Paste the SITE key here; it is public and safe in this file.
