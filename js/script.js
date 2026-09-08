@@ -52,6 +52,14 @@ document.addEventListener('DOMContentLoaded', function () {
      ═══════════════════════════════════════════ */
   const SUBSCRIBE_ENDPOINT = '/subscribe.php';
 
+  /* Google reCAPTCHA v3 — invisible, no checkbox, so the page design is
+     untouched. Paste the SITE key here; it is public and safe in this file.
+     The SECRET key goes on the server, in /www/secrets/kimcastle-ac.php.
+     Register the site at https://www.google.com/recaptcha/admin (choose v3).
+
+     While this is blank the form still works, just without reCAPTCHA. */
+  const RECAPTCHA_SITE_KEY = '6LfTsK8tAAAAAJfnKvOZ8LiVjxaoa9q87itNHL-Z';
+
   const optinForm = document.getElementById('optin-form');
   const optinLabel = document.getElementById('optin-label');
   const optinMessage = document.getElementById('optin-message');
@@ -59,9 +67,34 @@ document.addEventListener('DOMContentLoaded', function () {
   const firstNameInput = document.getElementById('first-name');
   const lastNameInput = document.getElementById('last-name');
   const emailInput = document.getElementById('email');
+  const honeypotInput = document.getElementById('website-url');
   const formInputs = [firstNameInput, lastNameInput, emailInput];
 
   const SUBMIT_TIMEOUT_MS = 12000;
+
+  /* Load reCAPTCHA only when a key is configured, so no third-party script
+     is pulled in (and no cookie set) until it is actually in use. */
+  if (RECAPTCHA_SITE_KEY) {
+    const recaptchaScript = document.createElement('script');
+    recaptchaScript.src = 'https://www.google.com/recaptcha/api.js?render=' + encodeURIComponent(RECAPTCHA_SITE_KEY);
+    recaptchaScript.async = true;
+    document.head.appendChild(recaptchaScript);
+  }
+
+  /* Resolves with a token, or with '' if reCAPTCHA is unconfigured or fails
+     to load. The server decides whether a missing token is fatal — that way
+     a blocked script never silently disables the protection. */
+  function recaptchaToken() {
+    if (!RECAPTCHA_SITE_KEY || !window.grecaptcha || !window.grecaptcha.execute) {
+      return Promise.resolve('');
+    }
+    return new Promise(function (resolve) {
+      window.grecaptcha.ready(function () {
+        window.grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: 'subscribe' })
+          .then(resolve, function () { resolve(''); });
+      });
+    });
+  }
 
   function showMessage(text, isError) {
     optinMessage.textContent = text;
@@ -164,7 +197,17 @@ document.addEventListener('DOMContentLoaded', function () {
     btnIn.textContent = 'Sending';
     clearMessage();
 
-    postSubscription(result.data)
+    recaptchaToken()
+      .then(function (token) {
+        const payload = {
+          firstname: result.data.firstname,
+          lastname: result.data.lastname,
+          email: result.data.email,
+          website: honeypotInput ? honeypotInput.value : ''
+        };
+        if (token) payload.recaptcha_token = token;
+        return postSubscription(payload);
+      })
       .then(function () {
         formInputs.forEach(i => i.value = '');
         optinLabel.textContent = 'You\'re in. Welcome.';

@@ -237,6 +237,17 @@ html, body {
   background: var(--gold);
 }
 
+/* Honeypot — off-screen rather than display:none, since some bots skip
+   fields that are explicitly hidden. */
+.optin-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* ── OPT-IN VALIDATION / STATUS MESSAGE ── */
 .optin-form input.is-invalid {
   border-bottom-color: #D98878;

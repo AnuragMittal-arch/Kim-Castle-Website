@@ -19,7 +19,13 @@ declare(strict_types=1);
 
    containing exactly:
 
-       <?php return ['api_key' => 'PASTE_THE_KEY_HERE'];
+       <?php return [
+           'api_key'          => 'PASTE_THE_AC_KEY_HERE',
+           'recaptcha_secret' => 'PASTE_THE_RECAPTCHA_SECRET_HERE',
+       ];
+
+   The reCAPTCHA secret is optional. Leave it out and the form works
+   without reCAPTCHA; add it and every submission must pass verification.
 
    Get the key from ActiveCampaign → Settings → Developer → API Key.
    ═══════════════════════════════════════════════════════════ */
@@ -28,6 +34,7 @@ const AC_API_BASE = 'https://intentionproducts.api-us1.com/api/3';
 const AC_LIST_ID  = 5;            // "Kim Castle General"
 const AC_STATUS   = 1;            // 1 = active/subscribed, 0 = unconfirmed (double opt-in)
 const THROTTLE_SECONDS = 5;       // minimum gap between submissions from one IP
+const RECAPTCHA_MIN_SCORE = 0.5;  // v3 score below this is treated as a bot
 const MAX_FIELD_LENGTH = 200;
 
 /* Candidate locations for the key file, first match wins. */
@@ -70,6 +77,19 @@ if (stripos($contentType, 'application/json') !== false) {
 $firstName = trim((string) ($input['firstname'] ?? ''));
 $lastName  = trim((string) ($input['lastname'] ?? ''));
 $email     = trim((string) ($input['email'] ?? ''));
+$honeypot  = trim((string) ($input['website'] ?? ''));
+$recaptchaToken = trim((string) ($input['recaptcha_token'] ?? ''));
+
+/* ── Honeypot ──
+   The "website" field is invisible and unlabelled, so no person can fill it.
+   Reply as though the sign-up worked: a bot that believes it succeeded moves
+   on, whereas an error invites it to retry with a different technique.
+   Nothing is sent to ActiveCampaign. */
+if ($honeypot !== '') {
+    error_log('[subscribe.php] honeypot triggered by ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
+    echo json_encode(['ok' => true]);
+    exit;
+}
 
 /* ── Validate (the browser checks too; never trust that) ── */
 if ($firstName === '' || $lastName === '' || $email === '') {
@@ -94,20 +114,73 @@ if (is_file($stampFile) && ($now - (int) @filemtime($stampFile)) < THROTTLE_SECO
 }
 @touch($stampFile);
 
-/* ── Load the API key from outside the web root ── */
-$apiKey = '';
+/* ── Load credentials from outside the web root ── */
+$config = [];
 foreach (CONFIG_PATHS as $path) {
     if (is_readable($path)) {
-        $config = require $path;
-        $apiKey = is_array($config) ? (string) ($config['api_key'] ?? '') : '';
-        if ($apiKey !== '') {
+        $loaded = require $path;
+        if (is_array($loaded) && !empty($loaded['api_key'])) {
+            $config = $loaded;
             break;
         }
     }
 }
+$apiKey = (string) ($config['api_key'] ?? '');
+$recaptchaSecret = (string) ($config['recaptcha_secret'] ?? '');
+
 if ($apiKey === '') {
     fail(503, 'Sign-up is temporarily unavailable. Please try again later.',
         'API key not found. Create /www/secrets/kimcastle-ac.php returning [\'api_key\' => \'...\'].');
+}
+
+/* ── reCAPTCHA v3 ──
+   Only enforced once a secret is configured, so adding the secret is what
+   switches protection on. Verified server-side: a token from the browser
+   proves nothing until Google confirms it. ── */
+function verifyRecaptcha(string $token, string $secret, string $ip): array
+{
+    $ch = curl_init('https://www.google.com/recaptcha/api/siteverify');
+    curl_setopt_array($ch, [
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => http_build_query([
+            'secret'   => $secret,
+            'response' => $token,
+            'remoteip' => $ip,
+        ]),
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT        => 10,
+    ]);
+    $body = curl_exec($ch);
+    curl_close($ch);
+
+    if ($body === false) {
+        return ['ok' => false, 'detail' => 'could not reach siteverify'];
+    }
+    $result = json_decode((string) $body, true);
+    if (!is_array($result) || empty($result['success'])) {
+        $codes = is_array($result['error-codes'] ?? null) ? implode(',', $result['error-codes']) : 'unknown';
+        return ['ok' => false, 'detail' => 'verification failed: ' . $codes];
+    }
+    if (($result['action'] ?? '') !== 'subscribe') {
+        return ['ok' => false, 'detail' => 'unexpected action: ' . ($result['action'] ?? 'none')];
+    }
+    $score = (float) ($result['score'] ?? 0);
+    if ($score < RECAPTCHA_MIN_SCORE) {
+        return ['ok' => false, 'detail' => 'score ' . $score . ' below ' . RECAPTCHA_MIN_SCORE];
+    }
+    return ['ok' => true, 'detail' => 'score ' . $score];
+}
+
+if ($recaptchaSecret !== '') {
+    if ($recaptchaToken === '') {
+        fail(403, 'We couldn\'t verify your browser. Please reload the page and try again.',
+            'no reCAPTCHA token supplied');
+    }
+    $verdict = verifyRecaptcha($recaptchaToken, $recaptchaSecret, $ip);
+    if (!$verdict['ok']) {
+        fail(403, 'We couldn\'t verify your browser. Please reload the page and try again.',
+            'reCAPTCHA rejected — ' . $verdict['detail']);
+    }
 }
 
 /* ── Call ActiveCampaign ── */
